@@ -5,16 +5,27 @@ var mf=0.1
 var sk=0.00
 var discount=0.9
 var start="3-1"
-var x=5;
-var y=5;
+var x=4;
+var y=3;
 var hardset=["4-1","4-2","2-2"]
 var walls=["2-2"]
 var white;
+var canrun=true;
+function init(_x,_y)
+{
+    x=parseInt(_x);
+    y=parseInt(_y);
+    grid={}
+    newgrid={}
+    canrun=false;
+    setup()
+
+}
 function setup() {
 	createCanvas(x*100, y*100);
 	for(var i=1;i<=x;i++)
 	{
-	    for(var j=1;j<=4;j++)
+	    for(var j=1;j<=y;j++)
 	    {
 	        grid[i+"-"+j]=0
 	    }
@@ -22,7 +33,7 @@ function setup() {
 	grid["4-1"]=1
 	grid["4-2"]=-1
 
-
+canrun=true;
 }
 function newit(its)
 {
@@ -74,9 +85,12 @@ for (var i = 0; i < x; i++) {
 	}
 }
 function draw() {
+    if(canrun)
+    {
 	background(0);
 	drawBackground();
 	drawNumber()
+	}
 
 }
 
