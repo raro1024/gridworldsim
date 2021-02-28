@@ -5,22 +5,22 @@ var mf=0.1
 var sk=0.00
 var discount=0.9
 var start="3-1"
-var x=4;
-var y=3;
+var x=5;
+var y=5;
 var hardset=["4-1","4-2","2-2"]
 var walls=["2-2"]
+var white;
 function setup() {
 	createCanvas(x*100, y*100);
-	for(var i=1;i<5;i++)
+	for(var i=1;i<=x;i++)
 	{
-	    for(var j=1;j<4;j++)
+	    for(var j=1;j<=4;j++)
 	    {
 	        grid[i+"-"+j]=0
 	    }
 	}
 	grid["4-1"]=1
 	grid["4-2"]=-1
-
 
 
 }
@@ -32,23 +32,52 @@ function newit(its)
 }
 function drawNumber()
 {
+
     for (var key in grid)
     {
         textSize(16);
+        fill(color('rgba(255, 255, 255, 1)'));
         text(grid[key], parseInt(key.split("-")[0]*100-50), parseInt(key.split("-")[1]*100-50) );
+
     }
 }
-function draw() {
-	background(220);
-	drawNumber()
-	for (var x = 0; x < width; x += width / 4) {
-		for (var y = 0; y < height; y += height / 3) {
-			stroke(0);
-			strokeWeight(1);
-			line(x, 0, x, height);
-			line(0, y, width, y);
+function isWall(key)
+{
+    return walls.indexOf(key)>-1;
+}
+function drawBackground()
+{
+for (var i = 0; i < x; i++) {
+		for (var j = 0; j < y; j++) {
+		    stroke(255);
+		    var key=(i+1)+"-"+(j+1);
+		    if (!isWall(key))
+		    {
+                if (grid[key]<0)
+                {
+                    var c = color("rgba(255, 0, 0, 1)")
+                }
+                else
+                {
+                    var c = color("rgba(0, 255, 0, "+grid[key]+")")
+                }
+		    }
+		    else
+		    {
+		        var c = color("rgba(71, 69, 63)")
+		    }
+
+            fill(c);
+			rect(100*i, 100*j, 100, 100);
+
 		}
 	}
+}
+function draw() {
+	background(0);
+	drawBackground();
+	drawNumber()
+
 }
 
 function calcval(key)
@@ -66,7 +95,8 @@ var ds={
         var left=parseFloat((discount*(dr*getValxy(ds["l"])+mf*getValxy(ds["u"])+mf*getValxy(ds["d"]))-sk).toFixed(2))
         var right=parseFloat((discount*(dr*getValxy(ds["r"])+mf*getValxy(ds["u"])+mf*getValxy(ds["d"]))-sk).toFixed(2))
         var vals=[up,down,left,right]
-    return Math.max(...vals)
+        var max=Math.max(...vals)
+    return [max,vals.indexOf(max)]
 }
 function addtuppel(a,b){return [a[0]+b[0],a[1]+b[1]]}
 
@@ -92,7 +122,8 @@ function recalc(its)
 
     for(var key in keys)
     {
-        newgrid[keys[key]]=calcval(keys[key])
+        newgrid[keys[key]]=calcval(keys[key])[0]
+
     }
 
 }
